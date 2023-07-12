@@ -17,6 +17,10 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Data
 public class Task {
+    public static class Constant{
+        public static final String DESCRIPTION="description";
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

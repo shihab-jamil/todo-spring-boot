@@ -1,7 +1,9 @@
 package ch.selise.todo.service.impl;
 
+import ch.selise.todo.dao.TaskQuery;
 import ch.selise.todo.dao.TaskRepository;
 import ch.selise.todo.dto.TaskCreateDTO;
+import ch.selise.todo.dto.TaskFilterDTO;
 import ch.selise.todo.dto.TaskStatusUpdateDTO;
 import ch.selise.todo.dto.TaskUpdateDTO;
 import ch.selise.todo.entity.Task;
@@ -83,7 +85,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<Task> get(SelisePage paging) {
-        return repository.findAll(paging.getPageable());
+//        return repository.findAll(paging.getPageable());
+        return repository.findAll(TaskQuery.getQuery(new TaskFilterDTO()), paging.getPageable());
     }
 
     @Override
