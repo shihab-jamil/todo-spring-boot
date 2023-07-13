@@ -2,10 +2,7 @@ package ch.selise.todo.service.impl;
 
 import ch.selise.todo.dao.TaskQuery;
 import ch.selise.todo.dao.TaskRepository;
-import ch.selise.todo.dto.TaskCreateDTO;
-import ch.selise.todo.dto.TaskFilterDTO;
-import ch.selise.todo.dto.TaskStatusUpdateDTO;
-import ch.selise.todo.dto.TaskUpdateDTO;
+import ch.selise.todo.dto.*;
 import ch.selise.todo.entity.Task;
 import ch.selise.todo.entity.User;
 import ch.selise.todo.exception.ExForbidden;
@@ -17,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Rhidoy
@@ -92,6 +90,20 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Page<Task> getByStatus(Boolean status, SelisePage paging) {
         return repository.findByCompleted(status, paging.getPageable());
+    }
+
+    boolean firstCall = true;
+
+    @SneakyThrows
+    @Override
+    @Transactional
+    public void create() {
+        TaskCreateDTO dto = new TaskCreateDTO();
+        dto.setUserId(1L);
+        dto.setCompleted(true);
+        dto.setDescription("Description");
+        create(dto);
+        throw new ExNotFound("not found");
     }
 
     private Task getById(Long id) {

@@ -28,4 +28,6 @@ public interface TaskService {
     Page<Task> get(SelisePage paging);
 
     Page<Task> getByStatus(Boolean status, SelisePage paging);
+
+    void create();
 }

@@ -64,4 +64,11 @@ public class AdminController {
                 data);
     }
 
+    @GetMapping("/create")
+    @ResponseStatus(HttpStatus.OK)
+    public void get(){
+        taskService.create();
+
+    }
+
 }

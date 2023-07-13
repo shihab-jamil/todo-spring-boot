@@ -1,9 +1,12 @@
 package ch.selise.todo.dao;
 
 import ch.selise.todo.entity.Task;
+import jakarta.persistence.LockModeType;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -28,4 +31,7 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
             countQuery = "select count(1) from Task where completed = :status"
     )
     Page<Task> findByCompleted(Boolean status, Pageable pageable);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Task findTaskById(@NotNull Long id);
 }
