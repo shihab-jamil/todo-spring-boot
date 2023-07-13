@@ -11,6 +11,6 @@ import lombok.Data;
 public class TaskFilterDTO {
     private String description;
     private Long userId;
-
+    private Boolean completed;
 
 }

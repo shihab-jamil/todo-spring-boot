@@ -29,6 +29,9 @@ public class TaskQuery {
             if (dto.getUserId() != null) {
                 predicates.add(cb.equal(userJoin.get("id"), dto.getUserId()));
             }
+            if(dto.getCompleted() != null) {
+                predicates.add(cb.equal(root.get("completed"), dto.getCompleted()));
+            }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

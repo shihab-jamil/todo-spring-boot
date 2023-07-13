@@ -60,7 +60,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<Task> getUserTask(Long userId, SelisePage paging) {
-        return repository.findByUserId(userId, paging.getPageable());
+        TaskFilterDTO dto = new TaskFilterDTO();
+        dto.setUserId(userId);
+        return repository.findAll(TaskQuery.getQuery(dto), paging.getPageable());
     }
 
     @Override
@@ -69,7 +71,10 @@ public class TaskServiceImpl implements TaskService {
             Boolean status,
             SelisePage paging
     ) {
-        return repository.findByUserIdAndCompleted(userId, status, paging.getPageable());
+        TaskFilterDTO dto = new TaskFilterDTO();
+        dto.setUserId(userId);
+        dto.setCompleted(status);
+        return repository.findAll(TaskQuery.getQuery(dto), paging.getPageable());
     }
 
     @Override
@@ -89,7 +94,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<Task> getByStatus(Boolean status, SelisePage paging) {
-        return repository.findByCompleted(status, paging.getPageable());
+        TaskFilterDTO dto = new TaskFilterDTO();
+        dto.setCompleted(status);
+        return repository.findAll(TaskQuery.getQuery(dto), paging.getPageable());
     }
 
     boolean firstCall = true;

@@ -1,8 +1,10 @@
 package ch.selise.todo.service.impl;
 
+import ch.selise.todo.dao.UserQuery;
 import ch.selise.todo.dao.UserRepository;
 import ch.selise.todo.dto.LoginDTO;
 import ch.selise.todo.dto.UserCreateDTO;
+import ch.selise.todo.dto.UserFilterDto;
 import ch.selise.todo.dto.UserUpdateDTO;
 import ch.selise.todo.entity.User;
 import ch.selise.todo.exception.ExBadRequest;
@@ -29,14 +31,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public org.springframework.data.domain.Page<User> get(SelisePage paging) {
-        if (paging.getFilter() != null)
-            return repository.findByFirstNameLikeIgnoreCaseOrLastNameLikeIgnoreCase(paging.getFilter()+'%', paging.getFilter()+'%', paging.getPageable());
+        if (paging.getFilter() != null) {
+            UserFilterDto dto = new UserFilterDto();
+            dto.setFirstName(paging.getFilter());
+            dto.setLastName(paging.getFilter());
+            return repository.findAll(UserQuery.getQuery(dto), paging.getPageable());
+        }
         return repository.findAll(paging.getPageable());
     }
 
     @Override
     public User get(String username) {
-        return repository.findByUsername(username)
+        UserFilterDto dto = new UserFilterDto();
+        dto.setUsername(username);
+        return repository.findAll(UserQuery.getQuery(dto))
                 .orElseThrow(() -> new ExNotFound("User not found for user name " + username));
     }
 
@@ -44,9 +52,11 @@ public class UserServiceImpl implements UserService {
     public User create(UserCreateDTO user) {
         //validate user
         validateUser(user);
-
+        UserFilterDto dto = new UserFilterDto();
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
         //check user already exist for username or email
-        if (repository.findByUsernameOrEmail(user.getUsername(), user.getEmail()).isPresent())
+        if (repository.findAll(UserQuery.getQuery(dto)).isPresent())
             throw new ExDataExist("User already exist with username or email");
 
         //crate the user and return it
